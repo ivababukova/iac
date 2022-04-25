@@ -1,35 +1,34 @@
----
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: yes-heartbeat
-  name: ui-yes-heartbeat
+    sandboxId: agi-grumpy-baboon
+  name: ui-agi-grumpy-baboon
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-heads-master-*
-    fluxcd.io/automated: 'false'
+    filter.fluxcd.io/chart-image: glob:refs-pull-690-merge-*
+    fluxcd.io/automated: 'true'
   labels:
-    sandboxId: yes-heartbeat
+    sandboxId: agi-grumpy-baboon
   name: ui
-  namespace: ui-yes-heartbeat
+  namespace: ui-agi-grumpy-baboon
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: 3a478d86a92394efc3577a182a6aef1c990f9fee
+    ref: refs/heads/master
   releaseName: ui
   values:
     biomageCi:
       repo: hms-dbmi-cellenics/ui
-      sandboxId: yes-heartbeat
+      sandboxId: agi-grumpy-baboon
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: ui
-      tag: refs-heads-master-8368dddf7e337161085cf91ffd0dd7b269a863a5
+      tag: refs-pull-690-merge-522ecd655f057c185f1853b49d556951de2ef13f
     kubernetes:
       env: staging
     livenessProbe:
@@ -50,35 +49,36 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: yes-heartbeat
-  name: api-yes-heartbeat
+    sandboxId: agi-grumpy-baboon
+  name: api-agi-grumpy-baboon
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-pull-333-merge-*
-    fluxcd.io/automated: 'true'
+    filter.fluxcd.io/chart-image: glob:refs-heads-master-*
+    fluxcd.io/automated: 'false'
   labels:
-    sandboxId: yes-heartbeat
+    sandboxId: agi-grumpy-baboon
   name: api
-  namespace: api-yes-heartbeat
+  namespace: api-agi-grumpy-baboon
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: refs/heads/master
+    ref: e37d7c83a70c47cbcbcf4cb50869dce707672f69
   releaseName: api
   values:
     biomageCi:
+      rdsSandboxId: default
       repo: hms-dbmi-cellenics/api
-      sandboxId: yes-heartbeat
+      sandboxId: agi-grumpy-baboon
     hpa:
       enabled: false
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: api
-      tag: refs-pull-333-merge-de7076f225dec9073547c1ac1687c59f064902f0
+      tag: refs-heads-master-01790843a1790cb60732d8e7d70f20a80920f8fa
     ingress:
       annotations:
         alb.ingress.kubernetes.io/healthcheck-path: /v1/health
@@ -102,8 +102,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: yes-heartbeat
-  name: worker-yes-heartbeat
+    sandboxId: agi-grumpy-baboon
+  name: worker-agi-grumpy-baboon
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -113,9 +113,9 @@ metadata:
     filter.fluxcd.io/r: glob:refs-heads-master-*-r
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: yes-heartbeat
+    sandboxId: agi-grumpy-baboon
   name: worker
-  namespace: worker-yes-heartbeat
+  namespace: worker-agi-grumpy-baboon
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/worker
@@ -131,7 +131,7 @@ spec:
       image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-6a1d82f5abbefe8344062dbf94970beea48df359-r
       memoryRequest: 4Gi
     replicaCount: 0
-    sandboxId: yes-heartbeat
+    sandboxId: agi-grumpy-baboon
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/worker-role-staging
 ---
@@ -139,26 +139,26 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: yes-heartbeat
-  name: pipeline-yes-heartbeat
+    sandboxId: agi-grumpy-baboon
+  name: pipeline-agi-grumpy-baboon
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/pipelineRunner: glob:refs-pull-224-merge-*-pipeline-runner
+    filter.fluxcd.io/pipelineRunner: glob:refs-heads-master-*-pipeline-runner
     filter.fluxcd.io/remoter-client: FILLED_IN_BY_CI
     filter.fluxcd.io/remoter-server: FILLED_IN_BY_CI
-    fluxcd.io/automated: 'true'
+    fluxcd.io/automated: 'false'
   labels:
-    sandboxId: yes-heartbeat
+    sandboxId: agi-grumpy-baboon
   name: pipeline
-  namespace: pipeline-yes-heartbeat
+  namespace: pipeline-agi-grumpy-baboon
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/pipeline
     path: chart-infra/
-    ref: refs/pull/224/head
+    ref: 270c7c320fab7e1020fdb21df09170059eb70c92
   releaseName: pipeline
   values:
     awsAccountId: '242905224710'
@@ -166,8 +166,8 @@ spec:
     clusterEnv: staging
     memoryRequest: 4Gi
     pipelineRunner:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-pull-224-merge-3c98210428a760b3e6a9905c308fba86a7c15df8-pipeline-runner
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-heads-master-270c7c320fab7e1020fdb21df09170059eb70c92-pipeline-runner
     replicaCount: 0
-    sandboxId: yes-heartbeat
+    sandboxId: agi-grumpy-baboon
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/pipeline-role-staging
