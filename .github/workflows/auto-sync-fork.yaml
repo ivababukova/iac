@@ -9,6 +9,7 @@ jobs:
       - uses: tgymnich/fork-sync@v1.4
         with:
           # token: ${{ secrets.API_TOKEN_GITHUB }}
+          auto_approve: true
           owner: hms-dbmi-cellenics
           base: master
           head: master
