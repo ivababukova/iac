@@ -3,8 +3,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: martinfosco-api349-worker2
-  name: ui-martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
+  name: ui-ahriman-gamy-booby
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -13,23 +13,23 @@ metadata:
     filter.fluxcd.io/chart-image: glob:refs-heads-master-*
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
   name: ui
-  namespace: ui-martinfosco-api349-worker2
+  namespace: ui-ahriman-gamy-booby
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: 131d328eb96a047eff913906e1014be1c3969e5c
+    ref: d680d14d32e946591c02293f6f931a750b65f678
   releaseName: ui
   values:
     biomageCi:
       repo: hms-dbmi-cellenics/ui
-      sandboxId: martinfosco-api349-worker2
+      sandboxId: ahriman-gamy-booby
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: ui
-      tag: refs-heads-master-c7c21e17f2adf808305a3110ca8f582985d2776a
+      tag: refs-heads-master-dbaafef951d6c1d0e078046c3598522503443e01
     kubernetes:
       env: staging
     livenessProbe:
@@ -44,42 +44,47 @@ spec:
       probeType: exec
     replicaCount: 1
     serviceAccount:
-      iamRole: arn:aws:iam::242905224710:role/ui-role-staging
+      iamRole: ui-role-staging
+  valuesFrom:
+  - configMapKeyRef:
+      key: account-config.yaml
+      name: account-config
+      namespace: flux
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: martinfosco-api349-worker2
-  name: api-martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
+  name: api-ahriman-gamy-booby
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-pull-349-merge-*
-    fluxcd.io/automated: 'true'
+    filter.fluxcd.io/chart-image: glob:refs-heads-master-*
+    fluxcd.io/automated: 'false'
   labels:
-    sandboxId: martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
   name: api
-  namespace: api-martinfosco-api349-worker2
+  namespace: api-ahriman-gamy-booby
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: refs/heads/master
+    ref: d680d14d32e946591c02293f6f931a750b65f678
   releaseName: api
   values:
     biomageCi:
       rdsSandboxId: default
       repo: hms-dbmi-cellenics/api
-      sandboxId: martinfosco-api349-worker2
+      sandboxId: ahriman-gamy-booby
     hpa:
       enabled: false
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: api
-      tag: refs-pull-349-merge-7fec53ad658004c9c564ad71d25511e103da7272
+      tag: refs-heads-master-16c436ad1098d9e47a0e103cbda30cb6966d0fed
     ingress:
       annotations:
         alb.ingress.kubernetes.io/healthcheck-path: /v1/health
@@ -97,42 +102,47 @@ spec:
       externalPort: 3000
       internalPort: 3000
     serviceAccount:
-      iamRole: arn:aws:iam::242905224710:role/api-role-staging
+      iamRole: api-role-staging
+  valuesFrom:
+  - configMapKeyRef:
+      key: account-config.yaml
+      name: account-config
+      namespace: flux
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: martinfosco-api349-worker2
-  name: worker-martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
+  name: worker-ahriman-gamy-booby
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/python: glob:refs-pull-272-merge-*-python
-    filter.fluxcd.io/r: glob:refs-pull-272-merge-*-r
-    fluxcd.io/automated: 'true'
+    filter.fluxcd.io/python: glob:refs-heads-master-*-python
+    filter.fluxcd.io/r: glob:refs-heads-master-*-r
+    fluxcd.io/automated: 'false'
   labels:
-    sandboxId: martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
   name: worker
-  namespace: worker-martinfosco-api349-worker2
+  namespace: worker-ahriman-gamy-booby
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/worker
     path: chart-infra/
-    ref: refs/pull/272/head
+    ref: fc236f47f4c511c7629bae0bf69eaa0fe284c274
   releaseName: worker
   values:
     kubernetes:
       env: staging
     python:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-pull-272-merge-37810091621470ae788798b74958bd7c58cdedc1-python
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-python
     r:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-pull-272-merge-37810091621470ae788798b74958bd7c58cdedc1-r
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-r
       memoryRequest: 4Gi
     replicaCount: 0
-    sandboxId: martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/worker-role-staging
 ---
@@ -140,35 +150,35 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: martinfosco-api349-worker2
-  name: pipeline-martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
+  name: pipeline-ahriman-gamy-booby
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/pipelineRunner: glob:refs-pull-231-merge-*-pipeline-runner
+    filter.fluxcd.io/pipelineRunner: glob:refs-pull-239-merge-*-pipeline-runner
     filter.fluxcd.io/remoter-client: FILLED_IN_BY_CI
     filter.fluxcd.io/remoter-server: FILLED_IN_BY_CI
     fluxcd.io/automated: 'true'
   labels:
-    sandboxId: martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
   name: pipeline
-  namespace: pipeline-martinfosco-api349-worker2
+  namespace: pipeline-ahriman-gamy-booby
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/pipeline
     path: chart-infra/
-    ref: refs/pull/231/head
+    ref: refs/pull/239/head
   releaseName: pipeline
   values:
     awsAccountId: '242905224710'
     awsRegion: eu-west-1
     clusterEnv: staging
-    memoryRequest: 4Gi
+    memoryRequest: 29Gi
     pipelineRunner:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-pull-231-merge-2f13a0037f639be8bdd1f94cdfecf9f7bd8ef1e0-pipeline-runner
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-pull-239-merge-cbd3e04b3a30ef09c6e145874bcc30dfc98710f3-pipeline-runner
     replicaCount: 0
-    sandboxId: martinfosco-api349-worker2
+    sandboxId: ahriman-gamy-booby
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/pipeline-role-staging

@@ -1,21 +1,20 @@
----
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: martinfosco-ui704-api348-p
-  name: ui-martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
+  name: ui-agi-hazy-dollar
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-pull-704-merge-*
+    filter.fluxcd.io/chart-image: glob:refs-pull-720-merge-*
     fluxcd.io/automated: 'true'
   labels:
-    sandboxId: martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
   name: ui
-  namespace: ui-martinfosco-ui704-api348-p
+  namespace: ui-agi-hazy-dollar
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
@@ -25,11 +24,11 @@ spec:
   values:
     biomageCi:
       repo: hms-dbmi-cellenics/ui
-      sandboxId: martinfosco-ui704-api348-p
+      sandboxId: agi-hazy-dollar
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: ui
-      tag: refs-pull-704-merge-47962afb43b12613a49e15e0f34600a6f2865458
+      tag: refs-pull-720-merge-a304f8831d522c3f1204ae214c9eff2cfba3e740
     kubernetes:
       env: staging
     livenessProbe:
@@ -44,25 +43,30 @@ spec:
       probeType: exec
     replicaCount: 1
     serviceAccount:
-      iamRole: arn:aws:iam::242905224710:role/ui-role-staging
+      iamRole: ui-role-staging
+  valuesFrom:
+  - configMapKeyRef:
+      key: account-config.yaml
+      name: account-config
+      namespace: flux
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: martinfosco-ui704-api348-p
-  name: api-martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
+  name: api-agi-hazy-dollar
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-pull-348-merge-*
+    filter.fluxcd.io/chart-image: glob:refs-pull-360-merge-*
     fluxcd.io/automated: 'true'
   labels:
-    sandboxId: martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
   name: api
-  namespace: api-martinfosco-ui704-api348-p
+  namespace: api-agi-hazy-dollar
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
@@ -73,13 +77,13 @@ spec:
     biomageCi:
       rdsSandboxId: default
       repo: hms-dbmi-cellenics/api
-      sandboxId: martinfosco-ui704-api348-p
+      sandboxId: agi-hazy-dollar
     hpa:
       enabled: false
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: api
-      tag: refs-pull-348-merge-b7c34b6f2a8e18b227e204600e0fff5dde9ed8d6
+      tag: refs-pull-360-merge-0552ca64d0f011f4b021eef0f491a5d093ac315a
     ingress:
       annotations:
         alb.ingress.kubernetes.io/healthcheck-path: /v1/health
@@ -97,14 +101,19 @@ spec:
       externalPort: 3000
       internalPort: 3000
     serviceAccount:
-      iamRole: arn:aws:iam::242905224710:role/api-role-staging
+      iamRole: api-role-staging
+  valuesFrom:
+  - configMapKeyRef:
+      key: account-config.yaml
+      name: account-config
+      namespace: flux
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: martinfosco-ui704-api348-p
-  name: worker-martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
+  name: worker-agi-hazy-dollar
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -114,25 +123,25 @@ metadata:
     filter.fluxcd.io/r: glob:refs-heads-master-*-r
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
   name: worker
-  namespace: worker-martinfosco-ui704-api348-p
+  namespace: worker-agi-hazy-dollar
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/worker
     path: chart-infra/
-    ref: fc236f47f4c511c7629bae0bf69eaa0fe284c274
+    ref: a20eda76cd19578a467e432943bf858b9be1921c
   releaseName: worker
   values:
     kubernetes:
       env: staging
     python:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-python
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-a20eda76cd19578a467e432943bf858b9be1921c-python
     r:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-r
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-a20eda76cd19578a467e432943bf858b9be1921c-r
       memoryRequest: 4Gi
     replicaCount: 0
-    sandboxId: martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/worker-role-staging
 ---
@@ -140,26 +149,26 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: martinfosco-ui704-api348-p
-  name: pipeline-martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
+  name: pipeline-agi-hazy-dollar
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/pipelineRunner: glob:refs-pull-230-merge-*-pipeline-runner
+    filter.fluxcd.io/pipelineRunner: glob:refs-heads-master-*-pipeline-runner
     filter.fluxcd.io/remoter-client: FILLED_IN_BY_CI
     filter.fluxcd.io/remoter-server: FILLED_IN_BY_CI
-    fluxcd.io/automated: 'true'
+    fluxcd.io/automated: 'false'
   labels:
-    sandboxId: martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
   name: pipeline
-  namespace: pipeline-martinfosco-ui704-api348-p
+  namespace: pipeline-agi-hazy-dollar
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/pipeline
     path: chart-infra/
-    ref: refs/pull/230/head
+    ref: 9746d1f27943bfd9e275e63d58e1572ba436f22b
   releaseName: pipeline
   values:
     awsAccountId: '242905224710'
@@ -167,8 +176,8 @@ spec:
     clusterEnv: staging
     memoryRequest: 4Gi
     pipelineRunner:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-pull-230-merge-6ca375a7e6329229bf772eb47f1063cb0f7ace31-pipeline-runner
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-heads-master-9746d1f27943bfd9e275e63d58e1572ba436f22b-pipeline-runner
     replicaCount: 0
-    sandboxId: martinfosco-ui704-api348-p
+    sandboxId: agi-hazy-dollar
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/pipeline-role-staging

@@ -1,35 +1,34 @@
----
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: agi-post-register
-  name: ui-agi-post-register
+    sandboxId: german-worker276
+  name: ui-german-worker276
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-pull-711-merge-*
-    fluxcd.io/automated: 'true'
+    filter.fluxcd.io/chart-image: glob:refs-heads-master-*
+    fluxcd.io/automated: 'false'
   labels:
-    sandboxId: agi-post-register
+    sandboxId: german-worker276
   name: ui
-  namespace: ui-agi-post-register
+  namespace: ui-german-worker276
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: refs/heads/master
+    ref: ea5a4277d5115f70e62bd6f53cee1ee7c125c786
   releaseName: ui
   values:
     biomageCi:
       repo: hms-dbmi-cellenics/ui
-      sandboxId: agi-post-register
+      sandboxId: german-worker276
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: ui
-      tag: refs-pull-711-merge-dd53eaf687c9326732af7cae91f522b7f0dbb7ae
+      tag: refs-heads-master-0ee32c05c7fb7c381b434b6b2ddaf2a07dc7a688
     kubernetes:
       env: staging
     livenessProbe:
@@ -44,42 +43,47 @@ spec:
       probeType: exec
     replicaCount: 1
     serviceAccount:
-      iamRole: arn:aws:iam::242905224710:role/ui-role-staging
+      iamRole: ui-role-staging
+  valuesFrom:
+  - configMapKeyRef:
+      key: account-config.yaml
+      name: account-config
+      namespace: flux
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: agi-post-register
-  name: api-agi-post-register
+    sandboxId: german-worker276
+  name: api-german-worker276
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-pull-352-merge-*
-    fluxcd.io/automated: 'true'
+    filter.fluxcd.io/chart-image: glob:refs-heads-master-*
+    fluxcd.io/automated: 'false'
   labels:
-    sandboxId: agi-post-register
+    sandboxId: german-worker276
   name: api
-  namespace: api-agi-post-register
+  namespace: api-german-worker276
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: refs/heads/master
+    ref: ea5a4277d5115f70e62bd6f53cee1ee7c125c786
   releaseName: api
   values:
     biomageCi:
       rdsSandboxId: default
       repo: hms-dbmi-cellenics/api
-      sandboxId: agi-post-register
+      sandboxId: german-worker276
     hpa:
       enabled: false
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: api
-      tag: refs-pull-352-merge-0b4f9f34b112417f28409bd60df5f46efb1481ce
+      tag: refs-heads-master-f3d0f867f2c35fc84f558b650b7036f0a11fd1b8
     ingress:
       annotations:
         alb.ingress.kubernetes.io/healthcheck-path: /v1/health
@@ -97,42 +101,47 @@ spec:
       externalPort: 3000
       internalPort: 3000
     serviceAccount:
-      iamRole: arn:aws:iam::242905224710:role/api-role-staging
+      iamRole: api-role-staging
+  valuesFrom:
+  - configMapKeyRef:
+      key: account-config.yaml
+      name: account-config
+      namespace: flux
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: agi-post-register
-  name: worker-agi-post-register
+    sandboxId: german-worker276
+  name: worker-german-worker276
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/python: glob:refs-heads-master-*-python
-    filter.fluxcd.io/r: glob:refs-heads-master-*-r
-    fluxcd.io/automated: 'false'
+    filter.fluxcd.io/python: glob:refs-pull-276-merge-*-python
+    filter.fluxcd.io/r: glob:refs-pull-276-merge-*-r
+    fluxcd.io/automated: 'true'
   labels:
-    sandboxId: agi-post-register
+    sandboxId: german-worker276
   name: worker
-  namespace: worker-agi-post-register
+  namespace: worker-german-worker276
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/worker
     path: chart-infra/
-    ref: fc236f47f4c511c7629bae0bf69eaa0fe284c274
+    ref: refs/pull/276/head
   releaseName: worker
   values:
     kubernetes:
       env: staging
     python:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-python
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-pull-276-merge-2d2d9760e4c475bd76023033fcdf1b0a555bb71a-python
     r:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-r
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-pull-276-merge-2d2d9760e4c475bd76023033fcdf1b0a555bb71a-r
       memoryRequest: 4Gi
     replicaCount: 0
-    sandboxId: agi-post-register
+    sandboxId: german-worker276
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/worker-role-staging
 ---
@@ -140,8 +149,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: agi-post-register
-  name: pipeline-agi-post-register
+    sandboxId: german-worker276
+  name: pipeline-german-worker276
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -152,14 +161,14 @@ metadata:
     filter.fluxcd.io/remoter-server: FILLED_IN_BY_CI
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: agi-post-register
+    sandboxId: german-worker276
   name: pipeline
-  namespace: pipeline-agi-post-register
+  namespace: pipeline-german-worker276
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/pipeline
     path: chart-infra/
-    ref: 7ff5726e5e35e10a1a1a35c95f8b1e9cc17bd6e6
+    ref: 9746d1f27943bfd9e275e63d58e1572ba436f22b
   releaseName: pipeline
   values:
     awsAccountId: '242905224710'
@@ -167,8 +176,8 @@ spec:
     clusterEnv: staging
     memoryRequest: 4Gi
     pipelineRunner:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-heads-master-7ff5726e5e35e10a1a1a35c95f8b1e9cc17bd6e6-pipeline-runner
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-heads-master-9746d1f27943bfd9e275e63d58e1572ba436f22b-pipeline-runner
     replicaCount: 0
-    sandboxId: agi-post-register
+    sandboxId: german-worker276
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/pipeline-role-staging
