@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -22,7 +23,7 @@ spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/pipeline
     path: chart-infra/
-    ref: 4e8558522dcdb6bdc7430bf20733bea2a9fd2973
+    ref: c55a2bee6eb2a536883b19c2ff4edaf2a8e6c291
   values:
     clusterEnv: staging
     awsAccountId: "242905224710"

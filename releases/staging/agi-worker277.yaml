@@ -3,33 +3,33 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: ivababukova-jumpy-toad
-  name: ui-ivababukova-jumpy-toad
+    sandboxId: agi-worker277
+  name: ui-agi-worker277
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-pull-718-merge-*
-    fluxcd.io/automated: 'true'
+    filter.fluxcd.io/chart-image: glob:refs-heads-master-*
+    fluxcd.io/automated: 'false'
   labels:
-    sandboxId: ivababukova-jumpy-toad
+    sandboxId: agi-worker277
   name: ui
-  namespace: ui-ivababukova-jumpy-toad
+  namespace: ui-agi-worker277
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: refs/heads/dynamically-create-configmap
+    ref: 097488cb50863188b9a3f79a4f87517357e14eb8
   releaseName: ui
   values:
     biomageCi:
       repo: hms-dbmi-cellenics/ui
-      sandboxId: ivababukova-jumpy-toad
+      sandboxId: agi-worker277
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: ui
-      tag: refs-pull-718-merge-93929c25975cd468958a8f52dc7a638dc89a8879
+      tag: refs-heads-master-29ee40ca5e25874ca771f620a83b737eb4b5c337
     kubernetes:
       env: staging
     livenessProbe:
@@ -43,6 +43,8 @@ spec:
       - '0'
       probeType: exec
     replicaCount: 1
+    service:
+      additionalHosts: false
     serviceAccount:
       iamRole: ui-role-staging
   valuesFrom:
@@ -55,8 +57,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: ivababukova-jumpy-toad
-  name: api-ivababukova-jumpy-toad
+    sandboxId: agi-worker277
+  name: api-agi-worker277
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -65,26 +67,26 @@ metadata:
     filter.fluxcd.io/chart-image: glob:refs-heads-master-*
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: ivababukova-jumpy-toad
+    sandboxId: agi-worker277
   name: api
-  namespace: api-ivababukova-jumpy-toad
+  namespace: api-agi-worker277
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: 903e2019223af7669dea0b92c10cc26dd047d5ee
+    ref: 097488cb50863188b9a3f79a4f87517357e14eb8
   releaseName: api
   values:
     biomageCi:
-      rdsSandboxId: STAGING_RDS_SANDBOX_ID
+      rdsSandboxId: default
       repo: hms-dbmi-cellenics/api
-      sandboxId: ivababukova-jumpy-toad
+      sandboxId: agi-worker277
     hpa:
       enabled: false
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: api
-      tag: refs-heads-master-53b7514c036eb3bfed4fdb3b350d3c3b3e957ad9
+      tag: refs-heads-master-624e66bb1bd6ff70dc204e8b410b5b1adb78466a
     ingress:
       annotations:
         alb.ingress.kubernetes.io/healthcheck-path: /v1/health
@@ -113,45 +115,50 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: ivababukova-jumpy-toad
-  name: worker-ivababukova-jumpy-toad
+    sandboxId: agi-worker277
+  name: worker-agi-worker277
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/python: glob:refs-heads-master-*-python
-    filter.fluxcd.io/r: glob:refs-heads-master-*-r
-    fluxcd.io/automated: 'false'
+    filter.fluxcd.io/python: glob:refs-pull-277-merge-*-python
+    filter.fluxcd.io/r: glob:refs-pull-277-merge-*-r
+    fluxcd.io/automated: 'true'
   labels:
-    sandboxId: ivababukova-jumpy-toad
+    sandboxId: agi-worker277
   name: worker
-  namespace: worker-ivababukova-jumpy-toad
+  namespace: worker-agi-worker277
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/worker
     path: chart-infra/
-    ref: fc236f47f4c511c7629bae0bf69eaa0fe284c274
+    ref: refs/pull/277/head
   releaseName: worker
   values:
     kubernetes:
       env: staging
     python:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-python
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-pull-277-merge-aa29f9661000898b552c4599dc610c6c691e4fbe-python
     r:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-r
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-pull-277-merge-aa29f9661000898b552c4599dc610c6c691e4fbe-r
       memoryRequest: 4Gi
     replicaCount: 0
-    sandboxId: ivababukova-jumpy-toad
+    sandboxId: agi-worker277
     serviceAccount:
-      iamRole: arn:aws:iam::242905224710:role/worker-role-staging
+      iamRole: worker-role-staging
+  valuesFrom:
+  - configMapKeyRef:
+      key: account-config.yaml
+      name: account-config
+      namespace: flux
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: ivababukova-jumpy-toad
-  name: pipeline-ivababukova-jumpy-toad
+    sandboxId: agi-worker277
+  name: pipeline-agi-worker277
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -162,14 +169,14 @@ metadata:
     filter.fluxcd.io/remoter-server: FILLED_IN_BY_CI
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: ivababukova-jumpy-toad
+    sandboxId: agi-worker277
   name: pipeline
-  namespace: pipeline-ivababukova-jumpy-toad
+  namespace: pipeline-agi-worker277
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/pipeline
     path: chart-infra/
-    ref: 75af8f34eb9e71ed05c205bd503cdccb5044cda3
+    ref: 4e8558522dcdb6bdc7430bf20733bea2a9fd2973
   releaseName: pipeline
   values:
     awsAccountId: '242905224710'
@@ -177,8 +184,8 @@ spec:
     clusterEnv: staging
     memoryRequest: 4Gi
     pipelineRunner:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-heads-master-75af8f34eb9e71ed05c205bd503cdccb5044cda3-pipeline-runner
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-heads-master-4e8558522dcdb6bdc7430bf20733bea2a9fd2973-pipeline-runner
     replicaCount: 0
-    sandboxId: ivababukova-jumpy-toad
+    sandboxId: agi-worker277
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/pipeline-role-staging

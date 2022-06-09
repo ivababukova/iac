@@ -1,20 +1,21 @@
+---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: ivababukova-gloppy-okapi
-  name: ui-ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
+  name: ui-martinfosco-ui723
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
   annotations:
-    filter.fluxcd.io/chart-image: glob:refs-pull-712-merge-*
+    filter.fluxcd.io/chart-image: glob:refs-pull-723-merge-*
     fluxcd.io/automated: 'true'
   labels:
-    sandboxId: ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
   name: ui
-  namespace: ui-ivababukova-gloppy-okapi
+  namespace: ui-martinfosco-ui723
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
@@ -24,11 +25,11 @@ spec:
   values:
     biomageCi:
       repo: hms-dbmi-cellenics/ui
-      sandboxId: ivababukova-gloppy-okapi
+      sandboxId: martinfosco-ui723
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: ui
-      tag: refs-pull-712-merge-b6f9a7e5d815996c475add9a9eea727082866e8d
+      tag: refs-pull-723-merge-8e3cbd71b448579feaba2529ea4eb249c00a5b8b
     kubernetes:
       env: staging
     livenessProbe:
@@ -42,6 +43,8 @@ spec:
       - '0'
       probeType: exec
     replicaCount: 1
+    service:
+      additionalHosts: false
     serviceAccount:
       iamRole: ui-role-staging
   valuesFrom:
@@ -54,8 +57,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: ivababukova-gloppy-okapi
-  name: api-ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
+  name: api-martinfosco-ui723
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -64,26 +67,26 @@ metadata:
     filter.fluxcd.io/chart-image: glob:refs-heads-master-*
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
   name: api
-  namespace: api-ivababukova-gloppy-okapi
+  namespace: api-martinfosco-ui723
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/iac
     path: charts/nodejs
-    ref: 9699725758a1d468b60b550280b0b1e2ea5dbb4a
+    ref: 7a80d1231c19af0f11fd5a72b294fb7c978ff518
   releaseName: api
   values:
     biomageCi:
-      rdsSandboxId: STAGING_RDS_SANDBOX_ID
+      rdsSandboxId: default
       repo: hms-dbmi-cellenics/api
-      sandboxId: ivababukova-gloppy-okapi
+      sandboxId: martinfosco-ui723
     hpa:
       enabled: false
     image:
       registry: 242905224710.dkr.ecr.eu-west-1.amazonaws.com
       repository: api
-      tag: refs-heads-master-16c436ad1098d9e47a0e103cbda30cb6966d0fed
+      tag: refs-heads-master-624e66bb1bd6ff70dc204e8b410b5b1adb78466a
     ingress:
       annotations:
         alb.ingress.kubernetes.io/healthcheck-path: /v1/health
@@ -112,8 +115,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: ivababukova-gloppy-okapi
-  name: worker-ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
+  name: worker-martinfosco-ui723
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -123,25 +126,25 @@ metadata:
     filter.fluxcd.io/r: glob:refs-heads-master-*-r
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
   name: worker
-  namespace: worker-ivababukova-gloppy-okapi
+  namespace: worker-martinfosco-ui723
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/worker
     path: chart-infra/
-    ref: fc236f47f4c511c7629bae0bf69eaa0fe284c274
+    ref: a20eda76cd19578a467e432943bf858b9be1921c
   releaseName: worker
   values:
     kubernetes:
       env: staging
     python:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-python
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-a20eda76cd19578a467e432943bf858b9be1921c-python
     r:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-fc236f47f4c511c7629bae0bf69eaa0fe284c274-r
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/worker:refs-heads-master-a20eda76cd19578a467e432943bf858b9be1921c-r
       memoryRequest: 4Gi
     replicaCount: 0
-    sandboxId: ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/worker-role-staging
 ---
@@ -149,8 +152,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    sandboxId: ivababukova-gloppy-okapi
-  name: pipeline-ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
+  name: pipeline-martinfosco-ui723
 ---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
@@ -161,14 +164,14 @@ metadata:
     filter.fluxcd.io/remoter-server: FILLED_IN_BY_CI
     fluxcd.io/automated: 'false'
   labels:
-    sandboxId: ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
   name: pipeline
-  namespace: pipeline-ivababukova-gloppy-okapi
+  namespace: pipeline-martinfosco-ui723
 spec:
   chart:
     git: git@github.com:hms-dbmi-cellenics/pipeline
     path: chart-infra/
-    ref: 1a6cc8006ec454638b949aebc7764a64e164f261
+    ref: 4e8558522dcdb6bdc7430bf20733bea2a9fd2973
   releaseName: pipeline
   values:
     awsAccountId: '242905224710'
@@ -176,8 +179,8 @@ spec:
     clusterEnv: staging
     memoryRequest: 4Gi
     pipelineRunner:
-      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-heads-master-1a6cc8006ec454638b949aebc7764a64e164f261-pipeline-runner
+      image: 242905224710.dkr.ecr.eu-west-1.amazonaws.com/pipeline:refs-heads-master-4e8558522dcdb6bdc7430bf20733bea2a9fd2973-pipeline-runner
     replicaCount: 0
-    sandboxId: ivababukova-gloppy-okapi
+    sandboxId: martinfosco-ui723
     serviceAccount:
       iamRole: arn:aws:iam::242905224710:role/pipeline-role-staging
